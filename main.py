@@ -13,25 +13,13 @@ model = Florence2Model()
 # Endpoint to list available tasks
 @app.get("/tasks")
 async def list_tasks():
-    welcome_message = """
-    <html>
-        <head>
-            <title>List of available tasks</title>
-        </head>
-        <body>
-            <h1>Available tasks</h1>
-            <ul>
-    """
-    for task, description in model.get_available_tasks().items():
-        welcome_message += f"<li><strong>{task}</strong>: {description}</li>"
 
-    return HTMLResponse(content=welcome_message)
+    return {"supported_tasks": str(model.get_available_tasks().items())}
 
     
 # Endpoint to handle image prediction
 @app.post("/predict")
 async def predict(file:UploadFile, task_type: str = Form(...), text_input: str = Form(None)):
-    print(file.content_type)
     # Check if the file provided is an image
     # if file.content_type not in ["image/jpeg", "image/png", "image/jpg"]:
     #     raise HTTPException(

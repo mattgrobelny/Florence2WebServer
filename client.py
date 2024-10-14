@@ -8,17 +8,17 @@ class APIClient:
         self.base_url = base_url
 
     def list_tasks(self):
-        response = requests.get(f"{self.base_url}/tasks")
-        print(response)
+        response = requests.get(f"{self.base_url}/tasks", timeout=5)
         return response.json()
 
-    def predict(self, image_path:UploadFile, task_type:str = Form(...), text_input:str = Form(None)):
-        # with open(image_path, "rb") as image_file:
-        files = {"file": image_path}
-        data = {"task_type": task_type, 
-                "text_input": text_input}
-        response = requests.post(
-            f"{self.base_url}/predict", files=files, data=data)
+    def predict(self, image_path:str, task_type:str = Form(...), text_input:str = Form(None)):
+        with open(image_path, "rb") as image_file:
+            
+            files = {"file": image_file}
+            data = {"task_type": task_type, 
+                    "text_input": text_input}
+            response = requests.post(
+                f"{self.base_url}/predict", files=files, data=data, timeout=1)
         return response.json()
 
 
@@ -39,9 +39,9 @@ if __name__ == "__main__":
 
     client = APIClient()
 
-    # # List available tasks
-    # tasks = client.list_tasks()
-    # print("Available tasks:", tasks)
+    # List available tasks
+    tasks = client.list_tasks()
+    print("Available tasks:", tasks)
 
     # Predict using an image
     prediction = client.predict(
