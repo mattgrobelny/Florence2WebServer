@@ -22,7 +22,7 @@ This project implements a web service that exposes Microsoft's Florence-2 model 
 - Supervision (for handling object detection results)
 
 
-## Setup
+## Setup Local
 
 1. Clone the repository:
    ```bash
@@ -34,7 +34,21 @@ This project implements a web service that exposes Microsoft's Florence-2 model 
     ```bash
    pip install -r requirements.txt
     ```
-
+## Set Up - Docker
+1. Clone the repository:
+   ```bash
+   git clone <repository_url>
+   cd <repository_directory>
+    ```
+2. Build API image
+    ```bash
+    docker build -t florence2webserver:latest .
+    ```
+3. Set up env file from API-example.env
+4. Run API container with port 8000 
+    ```bash
+    docker run --env-file .env  -p 8000:8000 florence2webserver:latest
+    ```
 ## Running the Server
 
 3. Run the FastAPI server
@@ -51,10 +65,14 @@ This project implements a web service that exposes Microsoft's Florence-2 model 
 
    POST /predict Takes as arguments the file path of the image, teh supported ```task_type``` and the optional ```text_input``` for the supported tasks
     ```bash
-   curl -X POST "http://localhost:8000/predict" -F "file=@<image_path>" -F "task_type=<task_type>" -F "text_input=<text_input>"
+   curl -X POST "http://localhost:8000/predict" -F "file=./leaves.png" -F "task_type=DETAILED_CAPTION" -F "text_input="
     ```
 
 5. Test the API by running the client
     ```bash
    python client.py
+    ```
+6. Output valid tasks
+    ````bash
+    python .\client.py -i .\leaves.png -t DETAILED_CAPTION
     ```
